@@ -9,7 +9,7 @@ public interface Vertex {
 	public Graph getGraph();
 	
 	public default boolean isIn(Graph g) {
-		return getGraph() == g;
+		return getGraph().equals(g);
 	}
 	
 	public default boolean isConnectedTo(Vertex v) {
