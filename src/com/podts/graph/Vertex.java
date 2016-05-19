@@ -13,6 +13,7 @@ public interface Vertex {
 	}
 	
 	public default boolean isConnectedTo(Vertex v) {
+		if(v == null || !v.isIn(getGraph())) return false;
 		for(Edge edge : getEdges()) {
 			if(edge.contains(v)) return true;
 		}
