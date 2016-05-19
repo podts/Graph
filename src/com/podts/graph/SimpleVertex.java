@@ -6,8 +6,8 @@ import java.util.Set;
 
 public class SimpleVertex<E extends Edge> implements Vertex {
 	
-	private final Graph g;
-	private final Set<E> realEdges = new HashSet<E>();
+	public final Graph g;
+	protected final Set<E> realEdges = new HashSet<E>();
 	public final Set<E> edges;
 	
 	@Override
