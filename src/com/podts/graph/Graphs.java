@@ -28,12 +28,12 @@ public class Graphs {
 		}
 		
 		@Override
-		public Class<?> getVertexClass() {
+		public Class<? extends Vertex> getVertexClass() {
 			return g.getVertexClass();
 		}
 
 		@Override
-		public Class<?> getEdgeClass() {
+		public Class<? extends Edge> getEdgeClass() {
 			return g.getEdgeClass();
 		}
 		

@@ -17,8 +17,8 @@ public interface Graph {
 	public Edge createEdge(Vertex v, Vertex x);
 	
 	public Class<? extends Path<?,?>> getPathClass();
-	public Class<?> getVertexClass();
-	public Class<?> getEdgeClass();
+	public Class<? extends Vertex> getVertexClass();
+	public Class<? extends Edge> getEdgeClass();
 	
 	@SuppressWarnings("unchecked")
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, Comparator<P> comp, Function<P,Boolean> criteria, Function<P,Boolean> acceptor) {
