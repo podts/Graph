@@ -4,7 +4,7 @@ import java.util.Collection;
 
 public class Graphs {
 	
-	public static Graph unModifiableGraph(Graph g) {
+	public static final Graph unModifiableGraph(Graph g) {
 		return new SafeGraph(g);
 	}
 	
