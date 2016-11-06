@@ -71,170 +71,63 @@ public interface Graph {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, Comparator<P> comp, Function<P,Boolean> criteria) {
 		
-		Graph g = start.getGraph();
-		
-		P nowhere;
-		try {
-			nowhere = (P) g.getPathClass().newInstance();
-			if(criteria.apply(nowhere))
-				return nowhere;
-		} catch (Exception e) {
-			
-		}
-		
-		Queue<P> paths = new PriorityQueue<P>(1, comp);
-
-		for(Edge e : start.getEdges()) {
-			P p;
-			try {
-				p = (P) g.getPathClass().getConstructor(g.getVertexClass(),g.getEdgeClass()).newInstance((V)start, (E)e);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
+		return getPath(start, comp, criteria, new Function<P,Boolean>() {
+			@Override
+			public Boolean apply(P p) {
+				return true;
 			}
-			if(criteria.apply(p)) return p;
-			paths.add(p);
-		}
-
-		while(!paths.isEmpty()) {
-			P p = paths.poll();
-			V latest = p.getLastVertex();
-			for(Edge e : latest.getEdges()) {
-				if(p.contains(e)) continue;
-				P np = (P) p.extend((E)e);
-				if(criteria.apply(np)) return np;
-				paths.add(np);
-			}
-		}
-
-		return null;
+		});
 	}
 	
-	@SuppressWarnings("unchecked")
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, Function<P,Boolean> criteria) {
 		
-		Graph g = start.getGraph();
-		
-		P nowhere;
-		try {
-			nowhere = (P) g.getPathClass().newInstance();
-			if(criteria.apply(nowhere))
-				return nowhere;
-		} catch (Exception e) {
-			
-		}
-		
-		LinkedList<P> paths = new LinkedList<P>();
-
-		for(Edge e : start.getEdges()) {
-			P p;
-			try {
-				p = (P) g.getPathClass().getConstructor(g.getVertexClass(),g.getEdgeClass()).newInstance((V)start, (E)e);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
+		return getPath(start, new Comparator<P>() {
+			@Override
+			public int compare(P a, P b) {
+				return a.getLength() - b.getLength();
 			}
-			paths.add(p);
-		}
-
-		while(!paths.isEmpty()) {
-			P p = paths.pop();
-			if(criteria.apply(p)) return p;
-			V latest = p.getLastVertex();
-			for(Edge e : latest.getEdges()) {
-				if(p.contains(e)) continue;
-				P np = (P) p.extend((E)e);
-				if(criteria.apply(np)) return np;
-				paths.add(np);
+		}, criteria, new Function<P,Boolean>() {
+			@Override
+			public Boolean apply(P p) {
+				return true;
 			}
-		}
-
-		return null;
+		});
+		
 	}
 	
-	@SuppressWarnings("unchecked")
-	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, V finish, Comparator<P> comp, Function<P,Boolean> criteria) {
+	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, V finish, Comparator<P> comp, Function<P,Boolean> acceptor) {
 		
-		Graph g = start.getGraph();
-		
-		if(start.equals(finish)) {
-			try {
-				return (P) g.getPathClass().newInstance();
-			} catch (Exception e) {
-				return null;
+		return getPath(start, new Comparator<P>() {
+			@Override
+			public int compare(P a, P b) {
+				return a.getLength() - b.getLength();
 			}
-		}
-		
-		Queue<P> paths = new PriorityQueue<P>(1, comp);
-
-		for(Edge e : start.getEdges()) {
-			P p;
-			try {
-				p = (P) g.getPathClass().getConstructor(g.getVertexClass(),g.getEdgeClass()).newInstance((V)start, (E)e);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
+		}, new Function<P,Boolean>() {
+			@Override
+			public Boolean apply(P path) {
+				if(path.getLastVertex() != null && path.getLastVertex().equals(finish)) return true;
+				return false;
 			}
-			paths.add(p);
-		}
-
-		while(!paths.isEmpty()) {
-			P p = paths.poll();
-			if(criteria.apply(p)) return p;
-			V latest = p.getLastVertex();
-			for(Edge e : latest.getEdges()) {
-				if(p.contains(e)) continue;
-				P np = (P) p.extend((E)e);
-				if(criteria.apply(np)) return np;
-				paths.add(np);
-			}
-		}
-
-		return null;
+		}, acceptor);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, V finish, Comparator<P> comp) {
 		
-		Graph g = start.getGraph();
+		return getPath(start, comp, new Function<P,Boolean>() {
+			@Override
+			public Boolean apply(P path) {
+				if(path.getLastVertex() != null && path.getLastVertex().equals(finish)) return true;
+				return false;
+			}
+		}, new Function<P,Boolean>() {
+			@Override
+			public Boolean apply(P path) {
+				return true;
+			}
+		});
 		
-		if(start.equals(finish)) {
-			try {
-				return (P) g.getPathClass().newInstance();
-			} catch (Exception e) {
-				return null;
-			}
-		}
-		
-		Queue<P> paths = new PriorityQueue<P>(1, comp);
-
-		for(Edge e : start.getEdges()) {
-			P p;
-			try {
-				p = (P) g.getPathClass().getConstructor(g.getVertexClass(),g.getEdgeClass()).newInstance((V)start, (E)e);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-			}
-			paths.add(p);
-		}
-
-		while(!paths.isEmpty()) {
-			P p = paths.poll();
-			if(p.getLastVertex().equals(finish)) return p;
-			V latest = p.getLastVertex();
-			for(Edge e : latest.getEdges()) {
-				if(p.contains(e)) continue;
-				P np = (P) p.extend((E)e);
-				if(np.getLastVertex().equals(finish)) return np;
-				paths.add(np);
-			}
-		}
-
-		return null;
 	}
 	
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, V finish) {
