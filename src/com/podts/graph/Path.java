@@ -8,6 +8,8 @@ public interface Path<V extends Vertex,E extends Edge> {
 	public E getLastEdge();
 	public V getLastVertex();
 	
+	public int getLength();
+	
 	public Path<V,E> extend(E e);
 	public boolean contains(Edge e);
 	

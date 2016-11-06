@@ -49,5 +49,10 @@ public class ListPath<V extends Vertex,E extends Edge> implements Path<V,E> {
 	public boolean contains(Edge e) {
 		return rEdges.contains(e);
 	}
+
+	@Override
+	public int getLength() {
+		return edges.size();
+	}
 	
 }

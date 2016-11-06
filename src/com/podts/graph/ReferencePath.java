@@ -8,6 +8,7 @@ public class ReferencePath<V extends Vertex,E extends Edge> implements Path<V,E>
 	protected final ReferencePath<V,E> previous;
 	public final E edge;
 	public final V last;
+	public final int length;
 	
 	@Override
 	public List<E> getEdges() {
@@ -59,6 +60,7 @@ public class ReferencePath<V extends Vertex,E extends Edge> implements Path<V,E>
 		previous = null;
 		last = null;
 		edge = null;
+		length = 0;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -66,6 +68,7 @@ public class ReferencePath<V extends Vertex,E extends Edge> implements Path<V,E>
 		previous = null;
 		last = (V) e.getOther(v);
 		edge = e;
+		length = 1;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -73,6 +76,12 @@ public class ReferencePath<V extends Vertex,E extends Edge> implements Path<V,E>
 		previous = p;
 		edge = e;
 		last = (V) e.getOther(p.getLastVertex());
+		length = p.getLength() + 1;
+	}
+
+	@Override
+	public int getLength() {
+		return length;
 	}
 	
 }

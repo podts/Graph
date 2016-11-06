@@ -9,7 +9,14 @@ import java.util.Queue;
 import java.util.function.Function;
 
 public interface Graph {
-
+	
+	public static final Comparator<Path<?,?>> shortestPathByEdges = new Comparator<Path<?,?>>() {
+		@Override
+		public int compare(Path<?,?> a, Path<?,?> b) {
+			return a.getLength() - b.getLength();
+		}
+	};
+	
 	public Collection<? extends Vertex> getVertexs();
 
 	public Vertex createVertex();
@@ -35,7 +42,7 @@ public interface Graph {
 		}
 		
 		Queue<P> paths = new PriorityQueue<P>(1, comp);
-
+		
 		for(Edge e : start.getEdges()) {
 			P p;
 			try {
@@ -45,12 +52,12 @@ public interface Graph {
 				return null;
 			}
 			if(!acceptor.apply(p)) continue;
+			if(criteria.apply(p)) return p;
 			paths.add(p);
 		}
 
 		while(!paths.isEmpty()) {
 			P p = paths.poll();
-			if(criteria.apply(p)) return p;
 			V latest = p.getLastVertex();
 			for(Edge e : latest.getEdges()) {
 				if(p.contains(e)) continue;
@@ -88,12 +95,12 @@ public interface Graph {
 				ex.printStackTrace();
 				return null;
 			}
+			if(criteria.apply(p)) return p;
 			paths.add(p);
 		}
 
 		while(!paths.isEmpty()) {
 			P p = paths.poll();
-			if(criteria.apply(p)) return p;
 			V latest = p.getLastVertex();
 			for(Edge e : latest.getEdges()) {
 				if(p.contains(e)) continue;
@@ -228,6 +235,28 @@ public interface Graph {
 		}
 
 		return null;
+	}
+	
+	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, V finish) {
+		
+		return getPath(start, new Comparator<P>() {
+			@Override
+			public int compare(P a, P b) {
+				return a.getLength() - b.getLength();
+			}
+		}, new Function<P,Boolean>() {
+			@Override
+			public Boolean apply(P path) {
+				if(path.getLastVertex().equals(finish)) return true;
+				return false;
+			}
+		}, new Function<P,Boolean>() {
+			@Override
+			public Boolean apply(P path) {
+				return true;
+			}
+		});
+		
 	}
 	
 	
