@@ -10,12 +10,14 @@ import java.util.function.Function;
 
 public interface Graph {
 	
-	public static final Comparator<Path<?,?>> shortestPathByEdges = new Comparator<Path<?,?>>() {
-		@Override
-		public int compare(Path<?,?> a, Path<?,?> b) {
-			return a.getLength() - b.getLength();
-		}
-	};
+	public static <P extends Path<?,?>> Comparator<P> shortestPathByEdges() {
+		return new Comparator<P>() {
+			@Override
+			public int compare(P a, P b) {
+				return a.getLength() - b.getLength();
+			}
+		};
+	}
 	
 	public Collection<? extends Vertex> getVertexs();
 
@@ -83,12 +85,7 @@ public interface Graph {
 	
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, Function<P,Boolean> criteria) {
 		
-		return getPath(start, new Comparator<P>() {
-			@Override
-			public int compare(P a, P b) {
-				return a.getLength() - b.getLength();
-			}
-		}, criteria, new Function<P,Boolean>() {
+		return getPath(start, shortestPathByEdges(), criteria, new Function<P,Boolean>() {
 			@Override
 			public Boolean apply(P p) {
 				return true;
@@ -99,12 +96,7 @@ public interface Graph {
 	
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, V finish, Comparator<P> comp, Function<P,Boolean> acceptor) {
 		
-		return getPath(start, new Comparator<P>() {
-			@Override
-			public int compare(P a, P b) {
-				return a.getLength() - b.getLength();
-			}
-		}, new Function<P,Boolean>() {
+		return getPath(start, shortestPathByEdges(), new Function<P,Boolean>() {
 			@Override
 			public Boolean apply(P path) {
 				if(path.getLastVertex() != null && path.getLastVertex().equals(finish)) return true;
@@ -132,12 +124,7 @@ public interface Graph {
 	
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, V finish) {
 		
-		return getPath(start, new Comparator<P>() {
-			@Override
-			public int compare(P a, P b) {
-				return a.getLength() - b.getLength();
-			}
-		}, new Function<P,Boolean>() {
+		return getPath(start, shortestPathByEdges(), new Function<P,Boolean>() {
 			@Override
 			public Boolean apply(P path) {
 				if(path.getLastVertex().equals(finish)) return true;
