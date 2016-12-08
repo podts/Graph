@@ -11,12 +11,7 @@ import java.util.function.Function;
 public interface Graph {
 	
 	public static <P extends Path<?,?>> Comparator<P> shortestPathByEdges() {
-		return new Comparator<P>() {
-			@Override
-			public int compare(P a, P b) {
-				return a.getLength() - b.getLength();
-			}
-		};
+		return (P a, P b) -> a.getLength() - b.getLength();
 	}
 	
 	public Collection<? extends Vertex> getVertexs();
@@ -75,22 +70,12 @@ public interface Graph {
 	
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, Comparator<P> comp, Function<P,Boolean> criteria) {
 		
-		return getPath(start, comp, criteria, new Function<P,Boolean>() {
-			@Override
-			public Boolean apply(P p) {
-				return true;
-			}
-		});
+		return getPath(start, comp, criteria, (P p) -> true);
 	}
 	
 	public default <P extends Path<V,E>, V extends Vertex, E extends Edge> P getPath(V start, Function<P,Boolean> criteria) {
 		
-		return getPath(start, shortestPathByEdges(), criteria, new Function<P,Boolean>() {
-			@Override
-			public Boolean apply(P p) {
-				return true;
-			}
-		});
+		return getPath(start, shortestPathByEdges(), criteria, (P p) -> true);
 		
 	}
 	
@@ -113,12 +98,7 @@ public interface Graph {
 				if(path.getLastVertex() != null && path.getLastVertex().equals(finish)) return true;
 				return false;
 			}
-		}, new Function<P,Boolean>() {
-			@Override
-			public Boolean apply(P path) {
-				return true;
-			}
-		});
+		}, (P p) -> true);
 		
 	}
 	
@@ -130,12 +110,7 @@ public interface Graph {
 				if(path.getLastVertex().equals(finish)) return true;
 				return false;
 			}
-		}, new Function<P,Boolean>() {
-			@Override
-			public Boolean apply(P path) {
-				return true;
-			}
-		});
+		}, (P p) -> true);
 		
 	}
 	
