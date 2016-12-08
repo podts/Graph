@@ -1,4 +1,4 @@
-package com.podts.graph;
+package com.podts.podgraph;
 
 public class SimpleEdge<V extends Vertex> implements Edge {
 	

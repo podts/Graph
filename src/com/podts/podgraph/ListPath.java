@@ -1,4 +1,4 @@
-package com.podts.graph;
+package com.podts.podgraph;
 
 import java.util.Collections;
 import java.util.LinkedList;
