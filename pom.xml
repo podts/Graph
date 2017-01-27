@@ -2,6 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.podts.graph</groupId>
 	<artifactId>PodGraph</artifactId>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>
