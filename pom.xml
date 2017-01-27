@@ -2,4 +2,5 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.podts.graph</groupId>
 	<artifactId>PodGraph</artifactId>
+	<!-- <packaging>jar</packaging>  -->
 </project>
