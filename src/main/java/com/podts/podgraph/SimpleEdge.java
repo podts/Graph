@@ -2,7 +2,7 @@ package com.podts.podgraph;
 
 public class SimpleEdge<V extends Vertex> implements Edge {
 	
-	public final Pair<V,V> pair;
+	private final Pair<V,V> pair;
 	
 	@Override
 	public Pair<V,V> getVertexs() {
