@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public interface Graph {
 	
@@ -15,6 +16,10 @@ public interface Graph {
 	}
 	
 	public Collection<? extends Vertex> getVertexs();
+	
+	public default Stream<? extends Vertex> vertexs() {
+		return getVertexs().stream();
+	}
 
 	public Vertex createVertex();
 
