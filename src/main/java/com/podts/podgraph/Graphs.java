@@ -57,6 +57,7 @@ public class Graphs {
 	}
 	
 	public static final boolean isConnected(Graph g) {
+		if(g.getVertexs().size() < 2) return true;
 		return !disjoints(g).skip(1).findFirst().isPresent();
 	}
 	

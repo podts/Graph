@@ -1,10 +1,15 @@
 package com.podts.podgraph;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 public interface Vertex {
 	
 	public Set<? extends Edge> getEdges();
+	
+	public default Stream<? extends Edge> edges() {
+		return getEdges().stream();
+	}
 	
 	public Graph getGraph();
 	
