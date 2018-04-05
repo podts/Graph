@@ -95,6 +95,7 @@ public class Graphs {
 						island.add(o);
 						verts.remove(o);
 						newEdges.addAll(o.getEdges());
+						v = o;
 					}
 				}
 				edges.clear();
